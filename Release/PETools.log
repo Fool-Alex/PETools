@@ -1,7 +1,9 @@
 ﻿  AddShell.cpp
+  ShowPE.cpp
+C:\Users\Administrator\Desktop\毕设\PE-Tools\ShowPE.cpp(9,10): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
   正在生成代码
-  3 of 26 functions (11.5%) were compiled, the rest were copied from previous compilation.
+  4 of 26 functions (15.4%) were compiled, the rest were copied from previous compilation.
     0 functions were new in current compilation
-    1 functions had inline decision re-evaluated but remain unchanged
+    2 functions had inline decision re-evaluated but remain unchanged
   已完成代码的生成
   PETools.vcxproj -> C:\Users\Administrator\Desktop\毕设\PE-Tools\Release\PETools.exe
