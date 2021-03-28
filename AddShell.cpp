@@ -11,6 +11,7 @@ BOOL CALLBACK AddShellDlg(
 {
 	//为全局变量赋值
 	hAddShellDlg = hwndDlg;
+	OPENFILENAME stOpenFile;
 	switch (uMsg)
 	{
 	case  WM_INITDIALOG:
@@ -27,11 +28,31 @@ BOOL CALLBACK AddShellDlg(
 
 	case  WM_COMMAND:
 	{
-		/*switch (LOWORD(wParam))
+		switch (LOWORD(wParam))
 		{
-		case IDC_BUTTON_SECTION:
+		case IDC_BUTTON_Src:
 		{
-			DialogBox(hAppInstance, MAKEINTRESOURCE(IDD_DIALOG_Section), hwndDlg, SectionTableDlg);
+			TCHAR szPeFileExt[100] = L"*.exe;*.dll;*.scr;*.drv;*.sys";
+			memset(szFileName, 0, sizeof(szFileName));
+			memset(&stOpenFile, 0, sizeof(OPENFILENAME));
+			stOpenFile.lStructSize = sizeof(OPENFILENAME);
+			stOpenFile.Flags = OFN_FILEMUSTEXIST | OFN_PATHMUSTEXIST;
+			stOpenFile.hwndOwner = hwndDlg;
+			stOpenFile.lpstrFilter = szPeFileExt;
+			stOpenFile.lpstrFile = szFileName;
+			stOpenFile.nMaxFile = MAX_PATH;
+
+			GetOpenFileName(&stOpenFile);
+			if (*szFileName)
+			{
+				//打开新的对话框
+				//DialogBox(hAppInstance, MAKEINTRESOURCE(IDD_DIALOG_PE), hwndDlg, PEDlg);
+			}
+			else
+			{
+				return TRUE;
+			}
+			//DialogBox(hAppInstance, MAKEINTRESOURCE(IDD_DIALOG_Section), hwndDlg, SectionTableDlg);
 			return TRUE;
 		}
 		case IDC_BUTTON_CLOSEPE:
@@ -39,12 +60,12 @@ BOOL CALLBACK AddShellDlg(
 			EndDialog(hwndDlg, 0);
 			return TRUE;
 		}
-		case IDC_BUTTON_DATADIR:
+		case IDC_BUTTON_AddShell:
 		{
-			DialogBox(hAppInstance, MAKEINTRESOURCE(IDD_DIALOG_DIRECTORY), hwndDlg, DirectoryDlg);
+			//DialogBox(hAppInstance, MAKEINTRESOURCE(IDD_DIALOG_DIRECTORY), hwndDlg, DirectoryDlg);
 			return TRUE;
 		}
-		}*/
+		}
 		break;
 	}
 	}
@@ -75,4 +96,5 @@ void ShowInfo(HWND hListShell, LPWSTR string)
 	vitem.iItem = Item;
 	vitem.iSubItem = 0;
 	SendMessage(hListShell, LVM_INSERTITEM, 0, (DWORD)&vitem);
+	Item++;
 }
