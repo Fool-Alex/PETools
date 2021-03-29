@@ -81,7 +81,6 @@
 #define IDC_LIST_ShowShell              1053
 #define IDC_BUTTON_Src                  1055
 #define IDC_EDIT_Src                    1057
-#define IDC_BUTTON2                     1058
 #define IDC_BUTTON_AddShell             1058
 #define IDC_STATIC                      -1
 

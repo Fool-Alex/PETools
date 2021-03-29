@@ -4,4 +4,4 @@
   Previous IPDB not found, fall back to full compilation.
   All 10 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
   已完成代码的生成
-  Shell.vcxproj -> C:\Users\Administrator\Desktop\毕设\PE-Tools\Release\Shell.exe
+  Shell.vcxproj -> C:\Users\Administrator\Desktop\毕设\PETOOSL\Release\Shell.exe

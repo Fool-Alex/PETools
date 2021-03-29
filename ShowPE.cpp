@@ -47,6 +47,13 @@ void SetEditText(HWND hDlg, int dwEditId, TCHAR* text)
 	SetWindowText(hEdit, text);
 }
 
+//获取Edit Control控件的内容
+void GetEditText(HWND hDlg, int dwEditId, OUT TCHAR* text)
+{
+	HWND hEdit = GetDlgItem(hDlg, dwEditId);
+	GetWindowText(hEdit, text, sizeof(text));
+}
+
 //TCHAR数组转为CHAR数组
 void TcharToChar(const TCHAR* tchar, char* _char)
 {

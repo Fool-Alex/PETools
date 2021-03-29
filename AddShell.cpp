@@ -1,5 +1,6 @@
 #include "AddShell.h"
 
+HWND hListShell;
 int Item = 0;
 
 BOOL CALLBACK AddShellDlg(
@@ -12,6 +13,7 @@ BOOL CALLBACK AddShellDlg(
 	//为全局变量赋值
 	hAddShellDlg = hwndDlg;
 	OPENFILENAME stOpenFile;
+	TCHAR string[256];
 	switch (uMsg)
 	{
 	case  WM_INITDIALOG:
@@ -45,14 +47,15 @@ BOOL CALLBACK AddShellDlg(
 			GetOpenFileName(&stOpenFile);
 			if (*szFileName)
 			{
-				//打开新的对话框
-				//DialogBox(hAppInstance, MAKEINTRESOURCE(IDD_DIALOG_PE), hwndDlg, PEDlg);
+				ShowInfo(hListShell, TEXT("选取源程序成功！"));
+				//将源程序显示到EditControl
+				SetEditText(hListShell, IDC_EDIT_Src, szFileName);
 			}
 			else
 			{
+				ShowInfo(hListShell, TEXT("选取源程序失败！请重试！"));
 				return TRUE;
 			}
-			//DialogBox(hAppInstance, MAKEINTRESOURCE(IDD_DIALOG_Section), hwndDlg, SectionTableDlg);
 			return TRUE;
 		}
 		case IDC_BUTTON_CLOSEPE:
@@ -62,7 +65,18 @@ BOOL CALLBACK AddShellDlg(
 		}
 		case IDC_BUTTON_AddShell:
 		{
-			//DialogBox(hAppInstance, MAKEINTRESOURCE(IDD_DIALOG_DIRECTORY), hwndDlg, DirectoryDlg);
+			memset(string, 0, sizeof(string));
+			GetEditText(hListShell, IDC_EDIT_Src, string);
+			if (lstrcmp(string, szFileName))
+			{
+				ShowInfo(hListShell, TEXT("开始加壳！"));
+
+			}
+			else
+			{
+				ShowInfo(hListShell, TEXT("请先选择源程序，再加壳！"));
+				return TRUE;
+			}
 			return TRUE;
 		}
 		}
@@ -76,11 +90,15 @@ BOOL CALLBACK AddShellDlg(
 void InitListView(HWND hwndDlg)
 {
 	LV_COLUMN lv;
-	HWND hListShell;
 	//初始化
 	memset(&lv, 0, sizeof(LV_COLUMN));
 	//获取IDC_LIST_ShowShell句柄
 	hListShell = GetDlgItem(hwndDlg, IDC_LIST_ShowShell);
+	lv.mask = LVCF_TEXT | LVCF_WIDTH | LVCF_SUBITEM;
+	lv.pszText = TEXT("输出信息");		//列标题				
+	lv.cx = 564;					//列宽
+	lv.iSubItem = 0;				//第几列
+	ListView_InsertColumn(hListShell, 0, &lv);//该宏等价于下面的SendMessage				
 	//SendMessage(hListProcess, LVM_INSERTCOLUMN, 0, (DWORD)&lv);
 	ShowInfo(hListShell, TEXT("请选择需要加壳的源程序！"));
 }

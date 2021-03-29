@@ -24,5 +24,3 @@ extern HWND hwndPEDialog;
 extern HWND hDirDlg;
 extern HWND hAddShellDlg;
 
-//公用函数
-extern DWORD ReadPEFile(IN LPSTR lpszFile, IN DWORD offset, OUT LPVOID* pFileBuffer);//读取文件

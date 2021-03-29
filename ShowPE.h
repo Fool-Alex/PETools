@@ -2,6 +2,7 @@
 #include "PETools.h"
 
 DWORD ReadPEFile(IN LPSTR lpszFile, IN DWORD offset, OUT LPVOID* pFileBuffer);//读取文件
+void GetEditText(HWND hDlg, int dwEditId, OUT TCHAR* text);//获取Edit Control控件的内容
 void SetEditText(HWND hDlg, int dwEditId, TCHAR* text);//设置Edit Control控件的内容
 void TcharToChar(const TCHAR* tchar, char* _char);//TCHAR数组转为CHAR数组
 void ShowDirectory(HWND HwndDirectoryDlg);//显示数据目录
