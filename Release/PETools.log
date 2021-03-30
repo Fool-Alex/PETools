@@ -1,10 +1,7 @@
 ﻿  AddShell.cpp
-  EnumProcessAndMoudle.cpp
-  PETools.cpp
-  ShowPE.cpp
-C:\Users\Administrator\Desktop\毕设\PETOOSL\ShowPE.cpp(9,10): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Users\Administrator\Desktop\毕设\PETOOSL\AddShell.cpp(226,15): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
   正在生成代码
-  1 of 27 functions ( 3.7%) were compiled, the rest were copied from previous compilation.
+  1 of 30 functions ( 3.3%) were compiled, the rest were copied from previous compilation.
     0 functions were new in current compilation
     1 functions had inline decision re-evaluated but remain unchanged
   已完成代码的生成
