@@ -23,4 +23,5 @@ extern TCHAR szFileName[256];//打开的文件名
 extern HWND hwndPEDialog;
 extern HWND hDirDlg;
 extern HWND hAddShellDlg;
+extern char pwd[256];
 

@@ -18,9 +18,6 @@
     <ClInclude Include="Resource.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="PE.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="ShowPE.h">
       <Filter>头文件</Filter>
     </ClInclude>

@@ -116,7 +116,7 @@ void EnumMoudle(HWND hListProcess, HWND hListModules)
 	return;
 }
 
-//初始化进程的ListView
+//初始化进程的ListControl
 void InitProcessListView(HWND hwndDlg)
 {
 	LV_COLUMN lv;
@@ -153,7 +153,7 @@ void InitProcessListView(HWND hwndDlg)
 	EnumProcess(hListProcess);
 }
 
-//初始化模块的ListView
+//初始化模块的ListControl
 void InitMoudleListView(HWND hwndDlg)
 {
 	LV_COLUMN lv;

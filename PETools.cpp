@@ -7,6 +7,7 @@ HWND hwndPEDialog;
 HWND hDirDlg;
 HWND hAddShellDlg;
 TCHAR szFileName[256];//打开的文件名
+char pwd[256];//当前工作目录
 
 
 BOOL CALLBACK AboutDlg(
@@ -48,6 +49,7 @@ BOOL CALLBACK MainDlgProc(
 		SendMessage(hwndDlg, WM_SETICON, ICON_SMALL, (DWORD)hSmallIcon);
 		InitProcessListView(hwndDlg);
 		InitMoudleListView(hwndDlg);
+		GetCurrentDirectoryA(sizeof(pwd), pwd);
 		return TRUE;
 	}
 
@@ -73,7 +75,7 @@ BOOL CALLBACK MainDlgProc(
 		{
 		case   IDC_BUTTON_SHOWPE:
 		{
-			TCHAR szPeFileExt[100] = L"*.exe;*.dll;*.scr;*.drv;*.sys";
+			TCHAR szPeFileExt[100] = L"*.exe;*.dll;*.ocx;*.drv;*.sys";
 			memset(szFileName, 0, sizeof(szFileName));
 			memset(&stOpenFile, 0, sizeof(OPENFILENAME));
 			stOpenFile.lStructSize = sizeof(OPENFILENAME);

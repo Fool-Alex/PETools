@@ -1,7 +1,8 @@
-﻿F:\Visual Studio 2019\MSBuild\Microsoft\VC\v160\Microsoft.CppBuild.targets(491,5): warning MSB8028: 中间目录(Release\)包含从另一个项目(PETools.vcxproj)共享的文件。   这会导致错误的清除和重新生成行为。
+﻿F:\Visual Studio 2019\MSBuild\Microsoft\VC\v160\Microsoft.CppBuild.targets(519,5): warning MSB8028: 中间目录(Release\)包含从另一个项目(PETools.vcxproj)共享的文件。   这会导致错误的清除和重新生成行为。
   Shell.cpp
+C:\Users\Administrator\Desktop\毕设\PETOOSL\Shell\Shell.cpp(102,10): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
   正在生成代码
   Previous IPDB not found, fall back to full compilation.
-  All 4 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  All 13 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
   已完成代码的生成
   Shell.vcxproj -> C:\Users\Administrator\Desktop\毕设\PETOOSL\Release\Shell.exe

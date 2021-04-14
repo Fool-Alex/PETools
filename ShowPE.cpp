@@ -9,7 +9,7 @@ DWORD ReadPEFile(IN LPSTR lpszFile, IN DWORD offset, OUT LPVOID* pFileBuffer)
 	pFile = fopen(lpszFile, "rb");
 	if (!pFile)
 	{
-		printf("无法打开EXE文件！");
+		MessageBox(NULL, L"无法打开EXE文件！", L"错误", MB_OK);
 		return 0;
 	}
 	//读取文件大小
@@ -21,7 +21,7 @@ DWORD ReadPEFile(IN LPSTR lpszFile, IN DWORD offset, OUT LPVOID* pFileBuffer)
 	memset(*pFileBuffer, 0, fileSize);
 	if (!(*pFileBuffer))
 	{
-		printf("分配空间失败！");
+		MessageBox(NULL, L"分配空间失败！", L"错误", MB_OK);
 		fclose(pFile);
 		return 0;
 	}
@@ -29,7 +29,7 @@ DWORD ReadPEFile(IN LPSTR lpszFile, IN DWORD offset, OUT LPVOID* pFileBuffer)
 	size_t n = fread(*pFileBuffer, fileSize - offset, 1, pFile);
 	if (!n)
 	{
-		printf("读取数据失败！");
+		MessageBox(NULL, L"读取数据失败！", L"错误", MB_OK);
 		free(*pFileBuffer);
 		fclose(pFile);
 		return 0;
@@ -79,7 +79,7 @@ void ShowDirectory(HWND HwndDirectoryDlg)
 	//判断是否是有效的MZ标志
 	if (*((PWORD)pFileBuffer) != IMAGE_DOS_SIGNATURE)
 	{
-		printf("不是有效的MZ标志\n");
+		MessageBox(NULL, L"不是有效的MZ标志！", L"错误", MB_OK);
 		free(pFileBuffer);
 		return;
 	}
@@ -190,7 +190,7 @@ void ShowSectionTable(HWND hListProcess)
 	//判断是否是有效的MZ标志
 	if (*((PWORD)pFileBuffer) != IMAGE_DOS_SIGNATURE)
 	{
-		printf("不是有效的MZ标志\n");
+		MessageBox(NULL, L"不是有效的MZ标志！", L"错误", MB_OK);
 		free(pFileBuffer);
 		return;
 	}
@@ -254,7 +254,7 @@ void GetPEHeader(IN LPSTR lpszFile)
 	//判断是否是有效的MZ标志
 	if (*((PWORD)pFileBuffer) != IMAGE_DOS_SIGNATURE)
 	{
-		printf("不是有效的MZ标志\n");
+		MessageBox(NULL, L"不是有效的MZ标志！", L"错误", MB_OK);
 		free(pFileBuffer);
 		return;
 	}

@@ -142,7 +142,6 @@
     <ClInclude Include="AddShell.h" />
     <ClInclude Include="EnumProcessAndMoudle.h" />
     <ClInclude Include="PETools.h" />
-    <ClInclude Include="PE.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="ShowPE.h" />
     <ClInclude Include="targetver.h" />
