@@ -145,12 +145,14 @@
     <ClInclude Include="Resource.h" />
     <ClInclude Include="ShowPE.h" />
     <ClInclude Include="targetver.h" />
+    <ClInclude Include="UnpackShell.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="EnumProcessAndMoudle.cpp" />
     <ClCompile Include="PETools.cpp" />
     <ClCompile Include="ShowPE.cpp" />
     <ClCompile Include="AddShell.cpp" />
+    <ClCompile Include="UnpackShell.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="PETools.rc" />

@@ -6,6 +6,7 @@ HINSTANCE hAppInstance;
 HWND hwndPEDialog;
 HWND hDirDlg;
 HWND hAddShellDlg;
+HWND hUnpackShellDlg;
 TCHAR szFileName[256];//打开的文件名
 char pwd[256];//当前工作目录
 
@@ -100,6 +101,11 @@ BOOL CALLBACK MainDlgProc(
 		case   IDC_BUTTON_AddShellMeau:
 		{
 			DialogBox(hAppInstance, MAKEINTRESOURCE(IDD_DIALOG_AddShell), hwndDlg, AddShellDlg);
+			return TRUE;
+		}
+		case   IDC_BUTTON_UnpackMeau:
+		{
+			DialogBox(hAppInstance, MAKEINTRESOURCE(IDD_DIALOG_UnpackShell), hwndDlg, UnpackShellDlg);
 			return TRUE;
 		}
 		case   IDC_BUTTON_ABOUT:

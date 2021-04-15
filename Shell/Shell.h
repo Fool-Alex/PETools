@@ -22,3 +22,4 @@ CONTEXT GetThreadContext(HANDLE hThread);//获取线程Context信息
 LPVOID VirtualAllocate(HANDLE hProcess, PVOID pAddress, DWORD size_t);//创建内存到指定位置
 DWORD GetProcessImageBase(PROCESS_INFORMATION procInfo);//获取进程基址
 CONTEXT GetThreadContext(HANDLE hThread);//获取线程Context信息
+LPVOID Xor(IN LPVOID pBuffer, DWORD size);//异或解密源文件

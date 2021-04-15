@@ -33,6 +33,9 @@
     <ClInclude Include="AddShell.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="UnpackShell.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="PETools.cpp">
@@ -45,6 +48,9 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="AddShell.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="UnpackShell.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

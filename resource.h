@@ -17,6 +17,7 @@
 #define IDD_DIALOG_Section              133
 #define IDD_DIALOG_DIRECTORY            134
 #define IDD_DIALOG_AddShell             135
+#define IDD_DIALOG_UnpackShell          136
 #define IDC_BUTTON_SHOWPE               1008
 #define IDC_BUTTON_EXIT                 1009
 #define IDC_BUTTON_ABOUT                1010
@@ -82,6 +83,11 @@
 #define IDC_BUTTON_Src                  1055
 #define IDC_EDIT_Src                    1057
 #define IDC_BUTTON_AddShell             1058
+#define IDC_LIST_ShowUnpack             1059
+#define IDC_BUTTON_UnpackSrc            1060
+#define IDC_EDIT_UnpackSrc              1061
+#define IDC_BUTTON_UnpackShell          1062
+#define IDC_BUTTON_UnpackMeau           1064
 #define IDC_STATIC                      -1
 
 // Next default values for new objects
@@ -91,7 +97,7 @@
 #define _APS_NO_MFC                     1
 #define _APS_NEXT_RESOURCE_VALUE        136
 #define _APS_NEXT_COMMAND_VALUE         32771
-#define _APS_NEXT_CONTROL_VALUE         1059
+#define _APS_NEXT_CONTROL_VALUE         1065
 #define _APS_NEXT_SYMED_VALUE           110
 #endif
 #endif

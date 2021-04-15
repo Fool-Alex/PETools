@@ -2,11 +2,54 @@
 
 #pragma comment( linker, "/subsystem:\"windows\" /entry:\"mainCRTStartup\"" )
 
+
 HANDLE hProcess = 0;
 HANDLE hThread = 0;
 
+// 顶级异常筛选函数，不能把功能代码放在这个函数内（会死循环）,非调试模式下回运行这里的代码
+LONG WINAPI ExceptionFilter(PEXCEPTION_POINTERS pExcept)
+{
+	// 跳过下面两行代码：
+	// 8900    MOV DWORD PTR DS:[EAX], EAX  
+	// FFE0    JMP EAX  
+	pExcept->ContextRecord->Eip += 4;
+
+	// 忽略异常，否则程序会退出
+	return EXCEPTION_CONTINUE_EXECUTION;
+}
+
+//将内存中的数据写入硬盘中
+BOOL MeneryToFile(IN LPVOID pMemBuffer, IN size_t size, OUT LPSTR lpszFile)
+{
+	//检测传入指针是否为空
+	if (!pMemBuffer)
+	{
+		MessageBox(NULL, L"缓存区指针无效！", L"错误", MB_OK);
+		return 0;
+	}
+	FILE* pFile = NULL;
+	if ((pFile = fopen(lpszFile, "wb+")) == NULL)
+	{
+		MessageBox(NULL, L"无法打开文件！", L"错误", MB_OK);
+		return 0;
+	}
+	fwrite(pMemBuffer, 1, size, pFile);
+	fclose(pFile);
+	pFile = NULL;
+	return size;
+}
+
 int main()
 {
+	//反调试
+	// 接管顶级异常处理程序
+	SetUnhandledExceptionFilter(ExceptionFilter);
+	// 主动制造 "非法地址" 异常，防止程序被调试	mov dword ptr [eax], eax
+	__asm {
+		xor eax, eax
+		mov dword ptr[eax], eax
+		jmp eax
+	}
     LPVOID pFileBuffer = NULL;
     DWORD file_size = 0;
     TCHAR FilePathSelfW[MAX_PATH];//获取自身路径
@@ -44,6 +87,7 @@ int main()
 			{
 				printf("当前文件需要修复重定位表，暂时无法加壳！");
 				free(pFileBuffer);
+				free(pSrcFileBuffer);
 				free(pSrcImageBuffer);
 				free(lpAddress);
 				return 0;
@@ -59,6 +103,7 @@ int main()
 		{
 			printf("文件写入失败. 原因: %d\n", (int)GetLastError());
 			free(pFileBuffer);
+			free(pSrcFileBuffer);
 			free(pSrcImageBuffer);
 			return 0;
 		}
@@ -68,12 +113,13 @@ int main()
 		context.Eax = SrcOEP + (DWORD)lpAddress;
 		context.ContextFlags = CONTEXT_FULL;
 		SetThreadContext(hThread, &context);
-		free(pFileBuffer);
-		free(pSrcImageBuffer);
 		ResumeThread(hThread);
 		printf("GetLastError: %d\n", (int)GetLastError());
 		CloseHandle(src_pi.hProcess);
 		CloseHandle(src_pi.hThread);
+		free(pFileBuffer);
+		free(pSrcFileBuffer);
+		free(pSrcImageBuffer);
 		return 0;
 	}
 	else
@@ -195,6 +241,7 @@ BOOL GetSrcInfo(LPVOID pFileBuffer, DWORD* SizeOfLastSec, DWORD* SrcImageBase, D
 	PIMAGE_FILE_HEADER pPEHeader = NULL;
 	PIMAGE_OPTIONAL_HEADER32 pOptionHeader = NULL;
 	PIMAGE_SECTION_HEADER pSectionHeader = NULL;
+	PIMAGE_DATA_DIRECTORY pDataDirectory = NULL;
 	//判断是否是有效的MZ标志
 	if (*((PWORD)pFileBuffer) != IMAGE_DOS_SIGNATURE)
 	{
@@ -206,15 +253,24 @@ BOOL GetSrcInfo(LPVOID pFileBuffer, DWORD* SizeOfLastSec, DWORD* SrcImageBase, D
 	pPEHeader = (PIMAGE_FILE_HEADER)((DWORD)pFileBuffer + pDosHeader->e_lfanew + 4);
 	pOptionHeader = (PIMAGE_OPTIONAL_HEADER32)((DWORD)pPEHeader + IMAGE_SIZEOF_FILE_HEADER);
 	pSectionHeader = (PIMAGE_SECTION_HEADER)((DWORD)pOptionHeader + pPEHeader->SizeOfOptionalHeader);
+	pDataDirectory = (PIMAGE_DATA_DIRECTORY)((DWORD)&pOptionHeader->NumberOfRvaAndSizes + 4);
 	//获取源文件的buffer
 	LPVOID EncryptedSrc = NULL;
-	*pSrcFileBuffer = (char*)pFileBuffer + (pSectionHeader + pPEHeader->NumberOfSections - 1)->PointerToRawData;
-	//解密函数
-	//TODO:
-	EncryptedSrc = *pSrcFileBuffer;//加密后记得更改pSrcFileBuffer
+	LPVOID DecryptedSrc = NULL;
+	EncryptedSrc = (LPBYTE)pFileBuffer + (pSectionHeader + pPEHeader->NumberOfSections - 1)->PointerToRawData;
+	//解密数据
+	DecryptedSrc = Xor(EncryptedSrc, (pSectionHeader + pPEHeader->NumberOfSections - 1)->Misc.VirtualSize);
+	if (!(*(CHAR*)DecryptedSrc))
+	{
+		MessageBox(NULL, L"解密文件失败！", L"错误", MB_OK);
+		free(pFileBuffer);
+		return 0;
+	}
+	//Sleep(1000);
+	*pSrcFileBuffer = DecryptedSrc;
 	//获取源程序信息
-	pDosHeader = (PIMAGE_DOS_HEADER)EncryptedSrc;
-	pPEHeader = (PIMAGE_FILE_HEADER)((DWORD)EncryptedSrc + pDosHeader->e_lfanew + 4);
+	pDosHeader = (PIMAGE_DOS_HEADER)DecryptedSrc;
+	pPEHeader = (PIMAGE_FILE_HEADER)((DWORD)DecryptedSrc + pDosHeader->e_lfanew + 4);
 	pOptionHeader = (PIMAGE_OPTIONAL_HEADER32)((DWORD)pPEHeader + IMAGE_SIZEOF_FILE_HEADER);
 	*SizeOfLastSec = pOptionHeader->SizeOfImage;
 	*SrcImageBase = pOptionHeader->ImageBase;
@@ -334,5 +390,21 @@ LPVOID VirtualAllocate(HANDLE hProcess, PVOID pAddress, DWORD size_t)
 
 	FreeLibrary(hModuleKernel);
 	return pAddress;
+}
+
+LPVOID Xor(IN LPVOID pBuffer, DWORD size)
+{
+	//DWORD count = 0;
+	char* pNewBuffer = NULL;
+	if (!(pNewBuffer = (char*)malloc(size)))
+		return NULL;
+	char* pTmp = (char*)pBuffer;
+	for (DWORD i = 0; i < size; i++)
+	{
+		*pNewBuffer = *((char*)pTmp) ^ 0x2;
+		pTmp++;
+		pNewBuffer++;
+	}
+	return (LPVOID)((DWORD)pNewBuffer - size);
 }
 

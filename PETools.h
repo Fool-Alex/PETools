@@ -16,6 +16,7 @@
 #include "EnumProcessAndMoudle.h"
 #include "ShowPE.h"
 #include "AddShell.h"
+#include "UnpackShell.h"
 
 //全局变量
 extern HINSTANCE hAppInstance;
@@ -23,5 +24,6 @@ extern TCHAR szFileName[256];//打开的文件名
 extern HWND hwndPEDialog;
 extern HWND hDirDlg;
 extern HWND hAddShellDlg;
+extern HWND hUnpackShellDlg;
 extern char pwd[256];
 

@@ -20,7 +20,7 @@ BOOL CALLBACK AddShellDlg(
 	{
 	case  WM_INITDIALOG:
 	{
-		InitListView(hwndDlg);
+		InitAddShellListView(hwndDlg);
 		EnableWindow(AddShellButton, FALSE);
 		break;
 	}
@@ -86,24 +86,27 @@ BOOL CALLBACK AddShellDlg(
 		}
 		case IDC_BUTTON_AddShell:
 		{
-			
-			ShowInfo(TEXT("开始加壳！"));
 			//开始加壳
+			ShowInfo(TEXT("开始加壳！请稍侯！"));
 			LPVOID pShellFileBuffer = NULL;
 			LPVOID pSrcFileBuffer = NULL;
 			BOOL isok = false;
 			// 读取源文件
 			memset(SrcPathA, 0, sizeof(SrcPathA));
 			TcharToChar(szFileName, SrcPathA);
-			DWORD File_Size_Src = ReadPEFile(SrcPathA, 0, &pSrcFileBuffer);
-			//内存中加密，获取大小
-
+			size_t File_Size_Src = ReadPEFile(SrcPathA, 0, &pSrcFileBuffer);
+			//加密源程序
+			ShowInfo(TEXT("正在加密源文件！请稍侯！"));
+			LPVOID pEncryptSrc = Xor(pSrcFileBuffer, File_Size_Src);
+			ShowInfo(TEXT("加密源文件完毕！"));
+			//------------------------------------------------------------
+			ShowInfo(TEXT("正在加壳中！请稍候！"));
 			//获取加密后的文件大小传入offset
 			strcpy(ShellFilePath, pwd);
-			strcat(ShellFilePath, "\\shell.exe");
+			strcat(ShellFilePath, "\\Shell.exe");
 			DWORD File_Size_Shell = ReadPEFile(ShellFilePath, 0, &pShellFileBuffer);
 			//加壳并存盘
-			AddSection(pShellFileBuffer, pSrcFileBuffer, File_Size_Shell, File_Size_Src);
+			AddSection(pShellFileBuffer, pEncryptSrc, File_Size_Shell, File_Size_Src);
 			return TRUE;
 		}
 		}
@@ -114,7 +117,7 @@ BOOL CALLBACK AddShellDlg(
 }
 
 //初始化ListView
-void InitListView(HWND hwndDlg)
+void InitAddShellListView(HWND hwndDlg)
 {
 	LV_COLUMN lv;
 	//初始化
@@ -192,7 +195,7 @@ VOID AddSection(LPVOID pSourceBuffer, LPVOID pAddBuffer, DWORD SourceFileSize, D
 	//填写新增节表的属性
 	unsigned char arr[8] = ".Shell";
 	memcpy(pNewSec->Name, arr, 8);
-	pNewSec->Misc.VirtualSize = Align(AddFileSize, pOptionHeader->SectionAlignment);
+	pNewSec->Misc.VirtualSize = AddFileSize;
 	if (pSectionHeader[pPEHeader->NumberOfSections - 1].Misc.VirtualSize > pSectionHeader[pPEHeader->NumberOfSections - 1].SizeOfRawData)
 	{
 		pNewSec->VirtualAddress = Align(pSectionHeader[pPEHeader->NumberOfSections - 1].VirtualAddress + pSectionHeader[pPEHeader->NumberOfSections - 1].Misc.VirtualSize, pOptionHeader->SectionAlignment);
@@ -228,7 +231,7 @@ VOID AddSection(LPVOID pSourceBuffer, LPVOID pAddBuffer, DWORD SourceFileSize, D
 	char OutputFile[256] = { 0 };
 	strcpy(OutputFile, pwd);
 	strcat(OutputFile, "\\AddShellFile.exe");
-	isok = MeneryToFile(pNewBuffer, Align(SourceFileSize + AddFileSize, pOptionHeader->FileAlignment), OutputFile);
+	isok = MeneryToFile(pNewBuffer, SourceFileSize + pNewSec->SizeOfRawData, OutputFile);
 	if (isok)
 	{
 		ShowInfo(TEXT("加壳完毕，加壳后文件名为：AddShellFile.exe"));
@@ -262,4 +265,20 @@ BOOL MeneryToFile(IN LPVOID pMemBuffer, IN size_t size, OUT LPSTR lpszFile)
 	fclose(pFile);
 	pFile = NULL;
 	return size;
+}
+
+LPVOID Xor(IN LPVOID pBuffer, DWORD size)
+{
+	//DWORD count = 0;
+	char* pNewBuffer = NULL;
+	if (!(pNewBuffer = (char*)malloc(size)))
+		return NULL;
+	char* pTmp = (char*)pBuffer;
+	for (DWORD i = 0; i < size; i++)
+	{
+		*pNewBuffer = *((char*)pTmp) ^ 0x2;
+		pTmp++;
+		pNewBuffer++;
+	}
+	return (LPVOID)((DWORD)pNewBuffer - size);
 }
