@@ -42,6 +42,10 @@ BOOL MeneryToFile(IN LPVOID pMemBuffer, IN size_t size, OUT LPSTR lpszFile)
 int main()
 {
 	//反调试
+	if (IsDebuggerPresent())//如果检测到被调试，程序直接退出
+	{
+		exit(0);
+	}
 	// 接管顶级异常处理程序
 	SetUnhandledExceptionFilter(ExceptionFilter);
 	// 主动制造 "非法地址" 异常，防止程序被调试	mov dword ptr [eax], eax
