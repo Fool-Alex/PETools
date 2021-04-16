@@ -1,2 +1,0 @@
-F:\RE\Windows\PE-Tools\Release\PETools.exe
-C:\Users\Administrator\Desktop\毕设\PE-Tools\Release\PETools.exe
